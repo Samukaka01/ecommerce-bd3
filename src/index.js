@@ -1,20 +1,27 @@
 import express from 'express';
-import conectarBanco from './config/dbConnection.js'; // Repare no ./ e no .js no final
+import conectarBanco from './config/dbConnection.js';
+
+import categoriaRoutes from './routes/categoriaRoutes.js';
+import clienteRoutes from './routes/clienteRoutes.js';
+import produtoRoutes from './routes/produtoRoutes.js';
+import pedidoRoutes from './routes/pedidoRoutes.js';
 
 const app = express();
 
-// Executa a função que faz a ligação ao MongoDB
 conectarBanco();
 
-// Configurações para o Express entender JSON (útil para o e-commerce)
 app.use(express.json());
+app.use('/categorias', categoriaRoutes);
+app.use('/clientes', clienteRoutes);
+app.use('/produtos', produtoRoutes);
+app.use('/pedidos', pedidoRoutes);
 
-// Uma rota de teste simples apenas para ver se está tudo a funcionar
+
 app.get('/', (req, res) => {
-  res.send('API do E-commerce a funcionar!');
+  res.send('API do E-commerce rodando com sucesso!');
 });
 
 const PORTA = 3000;
 app.listen(PORTA, () => {
-  console.log(`Servidor a rodar na porta http://localhost:${PORTA}`);
+  console.log(`Servidor rodando na porta http://localhost:${PORTA}`);
 });
