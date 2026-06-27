@@ -58,6 +58,58 @@ const ClienteController = {
     } catch (erro) {
       return res.status(500).json({ message: 'Erro ao excluir cliente', erro: erro.message });
     }
+  },
+
+  // 1. Create em Lote
+  inserirLote: async (req, res) => {
+    try {
+      const clientesSalvos = await Cliente.insertMany(req.body);
+      return res.status(201).json(clientesSalvos);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao inserir lote', erro: erro.message });
+    }
+  },
+
+  // 2. Read com Filtro e Projeção (Filtra por cidade, retorna apenas nome e email)
+  buscarComFiltros: async (req, res) => {
+    try {
+      const { cidade } = req.query;
+      const filtro = cidade ? { "enderecos.cidade": cidade } : {};
+      
+      const clientes = await Cliente.find(filtro, 'nome email');
+      return res.status(200).json(clientes);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro na busca avançada', erro: erro.message });
+    }
+  },
+
+  // 3. Update de Array Embutido (Atualiza o CEP de um endereço específico do cliente)
+  atualizarEndereco: async (req, res) => {
+    try {
+      const { idCliente, idEndereco } = req.params;
+      const { novoCep } = req.body;
+
+      const clienteAtualizado = await Cliente.findOneAndUpdate(
+        { _id: idCliente, "enderecos._id": idEndereco },
+        { $set: { "enderecos.$.cep": novoCep } },
+        { new: true }
+      );
+
+      if (!clienteAtualizado) return res.status(404).json({ mensagem: 'Cliente ou endereço não encontrado' });
+      return res.status(200).json(clienteAtualizado);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao atualizar array', erro: erro.message });
+    }
+  },
+
+  // 4. Delete com Filtro (Remover clientes que não possuem e-mail cadastrado)
+  removerSemEmail: async (req, res) => {
+    try {
+      const resultado = await Cliente.deleteMany({ email: { $exists: false } });
+      return res.status(200).json({ mensagem: `${resultado.deletedCount} clientes sem email removidos.` });
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao remover clientes', erro: erro.message });
+    }
   }
 };
 

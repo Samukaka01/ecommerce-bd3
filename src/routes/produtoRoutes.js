@@ -1,12 +1,16 @@
 import express from 'express';
-import PedidoController from '../controllers/PedidoController.js';
+import ProdutoController from '../controllers/ProdutoController.js';
 
 const router = express.Router();
 
-router.post('/', PedidoController.criar);
-router.get('/', PedidoController.listarTodos);
-router.get('/:id', PedidoController.buscarPorId);
-router.put('/:id', PedidoController.atualizar);
-router.delete('/:id', PedidoController.excluir);
+router.post('/', ProdutoController.criar);
+router.get('/', ProdutoController.listarTodos);
+router.post('/lote', ProdutoController.inserirLote);
+router.get('/filtro/avancado', ProdutoController.buscarComFiltros);
+router.delete('/limpeza/esgotados', ProdutoController.removerEsgotados);
+router.patch('/:idProduto/especificacoes/:idEspecificacao', ProdutoController.atualizarEspecificacao);
+router.get('/:id', ProdutoController.buscarPorId);
+router.put('/:id', ProdutoController.atualizar);
+router.delete('/:id', ProdutoController.excluir);
 
 export default router;

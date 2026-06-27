@@ -60,6 +60,58 @@ const ProdutoController = {
     } catch (erro) {
       return res.status(500).json({ mensagem: 'Erro ao excluir produto', erro: erro.message });
     }
+  },
+
+  // 1. Create em Lote
+  inserirLote: async (req, res) => {
+    try {
+      const produtosSalvos = await Produto.insertMany(req.body);
+      return res.status(201).json(produtosSalvos);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao inserir lote', erro: erro.message });
+    }
+  },
+
+  // 2. Read com Filtro e Projeção (Filtra por estoque mínimo, retorna nome e preço)
+  buscarComFiltros: async (req, res) => {
+    try {
+      const { estoqueMin } = req.query;
+      const filtro = estoqueMin ? { quantidadeEstoque: { $gte: Number(estoqueMin) } } : {};
+      
+      const produtos = await Produto.find(filtro, 'nome preco');
+      return res.status(200).json(produtos);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro na busca avançada', erro: erro.message });
+    }
+  },
+
+  // 3. Update de Array Embutido (Atualiza o valor de uma especificação técnica embutida)
+  atualizarEspecificacao: async (req, res) => {
+    try {
+      const { idProduto, idEspecificacao } = req.params;
+      const { novoValor } = req.body;
+
+      const produtoAtualizado = await Produto.findOneAndUpdate(
+        { _id: idProduto, "especificacoes._id": idEspecificacao },
+        { $set: { "especificacoes.$.valor": novoValor } },
+        { new: true }
+      );
+
+      if (!produtoAtualizado) return res.status(404).json({ mensagem: 'Produto ou especificação não encontrada' });
+      return res.status(200).json(produtoAtualizado);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao atualizar array', erro: erro.message });
+    }
+  },
+
+  // 4. Delete com Filtro (Deletar produtos com estoque zerado)
+  removerEsgotados: async (req, res) => {
+    try {
+      const resultado = await Produto.deleteMany({ quantidadeEstoque: 0 });
+      return res.status(200).json({ mensagem: `${resultado.deletedCount} produtos esgotados foram removidos.` });
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao remover esgotados', erro: erro.message });
+    }
   }
 };
 

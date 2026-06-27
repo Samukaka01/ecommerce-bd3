@@ -64,6 +64,59 @@ const CategoriaController = {
     } catch (erro) {
       return res.status(500).json({ mensagem: 'Erro ao excluir categoria', erro: erro.message });
     }
+  },
+
+  // Inserir várias categorias de uma vez
+  // 1. Create em Lote
+  inserirLote: async (req, res) => {
+    try {
+      const categoriasSalvas = await Categoria.insertMany(req.body);
+      return res.status(201).json(categoriasSalvas);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao inserir lote', erro: erro.message });
+    }
+  },
+
+  // 2. Read com Filtro e Projeção (Busca por nome usando Regex, retorna apenas nome)
+  buscarComFiltros: async (req, res) => {
+    try {
+      const { termo } = req.query;
+      const filtro = termo ? { nome: new RegExp(termo, 'i') } : {};
+      
+      const categorias = await Categoria.find(filtro, 'nome -_id');
+      return res.status(200).json(categorias);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro na busca avançada', erro: erro.message });
+    }
+  },
+
+  // 3. Update de Array Embutido (Atualizando o nome de uma 'tag' embutida)
+  atualizarTag: async (req, res) => {
+    try {
+      const { idCategoria, tagAntiga } = req.params;
+      const { novaTag } = req.body;
+
+      const categoriaAtualizada = await Categoria.findOneAndUpdate(
+        { _id: idCategoria, tags: tagAntiga },
+        { $set: { "tags.$": novaTag } },
+        { new: true }
+      );
+
+      if (!categoriaAtualizada) return res.status(404).json({ mensagem: 'Categoria ou tag não encontrada' });
+      return res.status(200).json(categoriaAtualizada);
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao atualizar array', erro: erro.message });
+    }
+  },
+
+  // 4. Delete com Filtro (Deletar categorias marcadas como inativas)
+  removerInativas: async (req, res) => {
+    try {
+      const resultado = await Categoria.deleteMany({ ativa: false });
+      return res.status(200).json({ mensagem: `${resultado.deletedCount} categorias inativas removidas.` });
+    } catch (erro) {
+      return res.status(500).json({ mensagem: 'Erro ao remover inativas', erro: erro.message });
+    }
   }
 };
 

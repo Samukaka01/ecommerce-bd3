@@ -6,6 +6,10 @@ const router = express.Router();
 // O caminho base será definido no index.js (ex: /categorias)
 router.post('/', CategoriaController.criar);
 router.get('/', CategoriaController.listarTodas);
+router.post('/lote', CategoriaController.inserirLote);
+router.get('/filtro/avancado', CategoriaController.buscarComFiltros);
+router.delete('/limpeza/inativas', CategoriaController.removerInativas);
+router.patch('/:idCategoria/tags/:tagAntiga', CategoriaController.atualizarTag);
 router.get('/:id', CategoriaController.buscarPorId);
 router.put('/:id', CategoriaController.atualizar);
 router.delete('/:id', CategoriaController.excluir);

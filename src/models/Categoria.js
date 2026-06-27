@@ -8,7 +8,14 @@ const categoriaSchema = new mongoose.Schema({
   },
   descricao: { 
     type: String 
-  }
+  },
+  ativa: { 
+    type: Boolean, 
+    default: true 
+  },
+  tags: [{ 
+    type: String 
+  }],
 }, { timestamps: true }); 
 
 export default mongoose.model('Categoria', categoriaSchema);
