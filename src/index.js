@@ -5,6 +5,7 @@ import categoriaRoutes from './routes/categoriaRoutes.js';
 import clienteRoutes from './routes/clienteRoutes.js';
 import produtoRoutes from './routes/produtoRoutes.js';
 import pedidoRoutes from './routes/pedidoRoutes.js';
+import relatorioRoutes from './routes/relatorioRoutes.js';
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.use('/categorias', categoriaRoutes);
 app.use('/clientes', clienteRoutes);
 app.use('/produtos', produtoRoutes);
 app.use('/pedidos', pedidoRoutes);
-
+app.use('/relatorios', relatorioRoutes);
 
 app.get('/', (req, res) => {
   res.send('API do E-commerce rodando com sucesso!');
