@@ -13,7 +13,6 @@ const ProdutoController = {
 
   listarTodos: async (req, res) => {
     try {
-      // Traz os dados da categoria associada
       const produtos = await Produto.find().populate('categoria');
       return res.status(200).json(produtos);
     } catch (erro) {

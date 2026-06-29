@@ -3,7 +3,6 @@ import CategoriaController from '../controllers/CategoriaController.js';
 
 const router = express.Router();
 
-// O caminho base será definido no index.js (ex: /categorias)
 router.post('/', CategoriaController.criar);
 router.get('/', CategoriaController.listarTodas);
 router.post('/lote', CategoriaController.inserirLote);
