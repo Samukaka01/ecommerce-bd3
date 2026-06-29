@@ -62,7 +62,6 @@ const ProdutoController = {
     }
   },
 
-  // 1. Create em Lote
   inserirLote: async (req, res) => {
     try {
       const produtosSalvos = await Produto.insertMany(req.body);
@@ -72,7 +71,6 @@ const ProdutoController = {
     }
   },
 
-  // 2. Read com Filtro e Projeção (Filtra por estoque mínimo, retorna nome e preço)
   buscarComFiltros: async (req, res) => {
     try {
       const { estoqueMin } = req.query;
@@ -85,7 +83,6 @@ const ProdutoController = {
     }
   },
 
-  // 3. Update de Array Embutido (Atualiza o valor de uma especificação técnica embutida)
   atualizarEspecificacao: async (req, res) => {
     try {
       const { idProduto, idEspecificacao } = req.params;
@@ -104,7 +101,6 @@ const ProdutoController = {
     }
   },
 
-  // 4. Delete com Filtro (Deletar produtos com estoque zerado)
   removerEsgotados: async (req, res) => {
     try {
       const resultado = await Produto.deleteMany({ quantidadeEstoque: 0 });

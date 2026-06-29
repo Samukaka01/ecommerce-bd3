@@ -1,7 +1,6 @@
 import Categoria from '../models/Categoria.js';
 
 const CategoriaController = {
-  // Criar uma nova categoria
   criar: async (req, res) => {
     try {
       const novaCategoria = new Categoria(req.body);
@@ -12,7 +11,6 @@ const CategoriaController = {
     }
   },
 
-  // Listar todas as categorias
   listarTodas: async (req, res) => {
     try {
       const categorias = await Categoria.find();
@@ -22,7 +20,6 @@ const CategoriaController = {
     }
   },
 
-  // Buscar uma categoria por ID
   buscarPorId: async (req, res) => {
     try {
       const categoria = await Categoria.findById(req.params.id);
@@ -31,14 +28,12 @@ const CategoriaController = {
       }
       return res.status(200).json(categoria);
     } catch (erro) {
-      return res.status(500).json({ mensagem: 'Erro ao buscar categoria', erro: erro.message });
+      return res.status(500).json({ mensagem: 'Erro em buscar categoria', erro: erro.message });
     }
   },
 
-  // Atualizar uma categoria por ID
   atualizar: async (req, res) => {
     try {
-      // new: true retorna o documento já atualizado
       const categoriaAtualizada = await Categoria.findByIdAndUpdate(
         req.params.id,
         req.body,
@@ -53,7 +48,6 @@ const CategoriaController = {
     }
   },
 
-  // Excluir uma categoria por ID
   excluir: async (req, res) => {
     try {
       const categoriaExcluida = await Categoria.findByIdAndDelete(req.params.id);
@@ -66,8 +60,7 @@ const CategoriaController = {
     }
   },
 
-  // Inserir várias categorias de uma vez
-  // 1. Create em Lote
+
   inserirLote: async (req, res) => {
     try {
       const categoriasSalvas = await Categoria.insertMany(req.body);
@@ -77,7 +70,6 @@ const CategoriaController = {
     }
   },
 
-  // 2. Read com Filtro e Projeção (Busca por nome usando Regex, retorna apenas nome)
   buscarComFiltros: async (req, res) => {
     try {
       const { termo } = req.query;
@@ -90,7 +82,6 @@ const CategoriaController = {
     }
   },
 
-  // 3. Update de Array Embutido (Atualizando o nome de uma 'tag' embutida)
   atualizarTag: async (req, res) => {
     try {
       const { idCategoria, tagAntiga } = req.params;
@@ -109,7 +100,6 @@ const CategoriaController = {
     }
   },
 
-  // 4. Delete com Filtro (Deletar categorias marcadas como inativas)
   removerInativas: async (req, res) => {
     try {
       const resultado = await Categoria.deleteMany({ ativa: false });

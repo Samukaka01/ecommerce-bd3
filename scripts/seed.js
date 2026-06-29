@@ -1,23 +1,22 @@
 import mongoose from 'mongoose';
-import Categoria from './models/Categoria.js';
-import Cliente from './models/Cliente.js';
-import Produto from './models/Produto.js';
-import Pedido from './models/Pedido.js';
+import Categoria from '../src/models/Categoria.js';
+import Cliente from '../src/models/Cliente.js';
+import Produto from '../src/models/Produto.js';
+import Pedido from '../src/models/Pedido.js';
 
-// Conexão direta com o banco (ajuste o nome do banco se for diferente de 'ecommerce')
 const MONGO_URL = 'mongodb://127.0.0.1:27017/ecommerce';
 
 const executarSeed = async () => {
   try {
     await mongoose.connect(MONGO_URL);
-    console.log('🔌 Conectado ao MongoDB! Iniciando o Seed...');
+    console.log('Conectado ao Banco!');
 
     // 1. Limpar o banco de dados para evitar duplicações
     await Categoria.deleteMany({});
     await Cliente.deleteMany({});
     await Produto.deleteMany({});
     await Pedido.deleteMany({});
-    console.log('🧹 Banco limpo com sucesso.');
+    console.log('Banco de dados limpo !');
 
     // 2. Gerar 50 Categorias
     const categoriasBase = ['Hardware', 'Monitores', 'Colecionáveis Anime', 'Skins e Jogos', 'Periféricos', 'Livros', 'Música'];
@@ -26,7 +25,7 @@ const executarSeed = async () => {
       categoriasInserir.push({
         nome: `${categoriasBase[i % categoriasBase.length]} - Ref ${i}`,
         descricao: `Descrição gerada automaticamente para a categoria ${i}`,
-        ativa: i % 5 !== 0, // A cada 5 categorias, 1 fica inativa (para dar variedade)
+        ativa: i % 5 !== 0, // A cada 5 categorias, 1 fica inativa 
         tags: ['seed', `tag${i}`, 'teste']
       });
     }
@@ -39,7 +38,7 @@ const executarSeed = async () => {
       clientesInserir.push({
         nome: `Cliente Teste ${i}`,
         email: `cliente${i}@teste.com`,
-        cpf: `000.000.000-${i.toString().padStart(2, '0')}`, // Gera CPFs como 000.000.000-01
+        cpf: `000.000.000-${i.toString().padStart(2, '0')}`,
         enderecos: [{ rua: `Rua Principal ${i}`, cidade: 'Santa Teresa', cep: '29650-000' }]
       });
     }
@@ -54,8 +53,8 @@ const executarSeed = async () => {
       const categoriaAleatoria = categoriasSalvas[Math.floor(Math.random() * categoriasSalvas.length)];
       produtosInserir.push({
         nome: `${produtosBase[i % produtosBase.length]} V${i}`,
-        preco: Math.floor(Math.random() * 900) + 50, // Preço aleatório entre 50 e 950
-        quantidadeEstoque: Math.floor(Math.random() * 100), // Estoque até 100
+        preco: Math.floor(Math.random() * 900) + 50, 
+        quantidadeEstoque: Math.floor(Math.random() * 100), 
         categoria: categoriaAleatoria._id,
         especificacoes: [{ chave: 'Cor', valor: i % 2 === 0 ? 'Preto' : 'Branco' }]
       });
@@ -64,7 +63,7 @@ const executarSeed = async () => {
     console.log('✅ 50 Produtos inseridos!');
 
     // 5. Gerar 50 Pedidos
-    const statusDisponiveis = ['Pendente', 'Concluído', 'Cancelado'];
+    const statusDisponiveis = ['Pendente', 'Aprovado', 'Enviado', 'Entregue', 'Cancelado'];
     const pedidosInserir = [];
     for (let i = 1; i <= 50; i++) {
       const clienteAleatorio = clientesSalvos[Math.floor(Math.random() * clientesSalvos.length)];
@@ -73,8 +72,8 @@ const executarSeed = async () => {
       const prod1 = produtosSalvos[Math.floor(Math.random() * produtosSalvos.length)];
       const prod2 = produtosSalvos[Math.floor(Math.random() * produtosSalvos.length)];
       
-      const qtd1 = Math.floor(Math.random() * 3) + 1; // Compra de 1 a 3 unidades
-      const qtd2 = Math.floor(Math.random() * 2) + 1; // Compra de 1 a 2 unidades
+      const qtd1 = Math.floor(Math.random() * 3) + 1; 
+      const qtd2 = Math.floor(Math.random() * 2) + 1; 
       const valorTotal = (prod1.preco * qtd1) + (prod2.preco * qtd2);
 
       pedidosInserir.push({
@@ -83,7 +82,7 @@ const executarSeed = async () => {
           { produto: prod1._id, quantidade: qtd1, precoUnitario: prod1.preco },
           { produto: prod2._id, quantidade: qtd2, precoUnitario: prod2.preco }
         ],
-        valorTotal: valorTotal,
+        total: valorTotal,
         status: statusDisponiveis[Math.floor(Math.random() * statusDisponiveis.length)]
       });
     }
