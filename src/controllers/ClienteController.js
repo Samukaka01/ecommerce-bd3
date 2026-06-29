@@ -60,7 +60,6 @@ const ClienteController = {
     }
   },
 
-  // 1. Create em Lote
   inserirLote: async (req, res) => {
     try {
       const clientesSalvos = await Cliente.insertMany(req.body);
@@ -70,7 +69,6 @@ const ClienteController = {
     }
   },
 
-  // 2. Read com Filtro e Projeção (Filtra por cidade, retorna apenas nome e email)
   buscarComFiltros: async (req, res) => {
     try {
       const { cidade } = req.query;
@@ -83,7 +81,6 @@ const ClienteController = {
     }
   },
 
-  // 3. Update de Array Embutido (Atualiza o CEP de um endereço específico do cliente)
   atualizarEndereco: async (req, res) => {
     try {
       const { idCliente, idEndereco } = req.params;
@@ -102,7 +99,6 @@ const ClienteController = {
     }
   },
 
-  // 4. Delete com Filtro (Remover clientes que não possuem e-mail cadastrado)
   removerSemEmail: async (req, res) => {
     try {
       const resultado = await Cliente.deleteMany({ email: { $exists: false } });

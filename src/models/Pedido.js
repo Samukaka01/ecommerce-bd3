@@ -29,7 +29,7 @@ const pedidoSchema = new mongoose.Schema({
   },
   status: { 
     type: String, 
-    enum: ['Pendente', 'Aprovado', 'Enviado', 'Entregue', 'Cancelado'], // Restringe as opções de status
+    enum: ['Pendente', 'Aprovado', 'Enviado', 'Entregue', 'Cancelado'], 
     default: 'Pendente' 
   }
 }, { timestamps: true });

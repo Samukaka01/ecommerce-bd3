@@ -66,7 +66,6 @@ const PedidoController = {
     }
   },
 
-  // 1. Create em Lote
   inserirLote: async (req, res) => {
     try {
       const pedidosSalvos = await Pedido.insertMany(req.body);
@@ -76,7 +75,6 @@ const PedidoController = {
     }
   },
 
-  // 2. Read com Filtro e Projeção (Filtra por status, retorna cliente e valor total)
   buscarComFiltros: async (req, res) => {
     try {
       const { status } = req.query;
@@ -89,7 +87,6 @@ const PedidoController = {
     }
   },
 
-  // 3. Update de Array Embutido (Altera a quantidade de um produto dentro da lista do pedido)
   atualizarItemPedido: async (req, res) => {
     try {
       const { idPedido, idProduto } = req.params;
@@ -108,7 +105,6 @@ const PedidoController = {
     }
   },
 
-  // 4. Delete com Filtro (Deletar pedidos com status "Cancelado")
   removerCancelados: async (req, res) => {
     try {
       const resultado = await Pedido.deleteMany({ status: 'Cancelado' });
